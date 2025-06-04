@@ -15,7 +15,7 @@ import view.MahasiswaView;
 
 import dao.UserDAO;
 
-import view.DosenView;
+import view.MainView;
 
 import view.LoginView;
 
@@ -35,8 +35,7 @@ public class LoginController {
     	String password = loginView.getPassword();
     	if (userDAO.login(username, password)) {
         	loginView.showMessage("Login berhasil");
-                new DosenView().setVisible(true);
-//        	new MahasiswaView().setVisible(true);
+                new MainView().setVisible(true);
         	loginView.dispose();
     	} else {
         	loginView.showMessage("Username atau password salah");
