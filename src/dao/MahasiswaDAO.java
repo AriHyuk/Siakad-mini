@@ -13,6 +13,7 @@ import java.util.*;
  * @author Ari Awaludin
  */
 public class MahasiswaDAO {
+    
 	public List<Mahasiswa> getAllMahasiswa() {
     	List<Mahasiswa> list = new ArrayList<>();
     	try (Connection conn = (Connection) Database.getConnection();
