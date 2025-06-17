@@ -44,7 +44,7 @@ public class MainView extends JFrame {
             dispose();
         });
 
-        btnMatkul.addActionListener(e -> {            // NEW
+        btnMatkul.addActionListener( e -> {           
             new MatkulView().setVisible(true);
             dispose();
         });
