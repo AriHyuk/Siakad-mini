@@ -8,7 +8,7 @@ import java.awt.event.*;
 import java.util.List;
 
 public class MatkulView extends JFrame {
-    private JTextField txtId   = new JTextField();
+    private JTextField txtKodeMk = new JTextField();
     private JTextField txtNama = new JTextField();
     private JTextField txtSks  = new JTextField();
     private JButton btnTambah  = new JButton("Tambah");
@@ -17,6 +17,8 @@ public class MatkulView extends JFrame {
     private JTable table       = new JTable();
     private DefaultTableModel model;
     private MatkulController controller;
+    // Id tidak diinput user
+    private int idTerpilih = -1;
 
     public MatkulView() {
         setTitle("Data Mata Kuliah");
@@ -24,8 +26,8 @@ public class MatkulView extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
 
-        add(new JLabel("ID Matkul")).setBounds(20, 30, 100, 25);
-        txtId.setBounds(130, 30, 180, 25); add(txtId);
+        add(new JLabel("Kode Matkul")).setBounds(20, 30, 100, 25);
+        txtKodeMk.setBounds(130, 30, 180, 25); add(txtKodeMk);
 
         add(new JLabel("Nama Matkul")).setBounds(20, 70, 100, 25);
         txtNama.setBounds(130, 70, 180, 25); add(txtNama);
@@ -37,21 +39,21 @@ public class MatkulView extends JFrame {
         btnUbah.setBounds  (340, 70, 90, 25); add(btnUbah);
         btnHapus.setBounds (340,110, 90, 25); add(btnHapus);
 
-        model = new DefaultTableModel(new Object[] {"ID Matkul", "Nama Matkul", "SKS"}, 0);
+        model = new DefaultTableModel(new Object[] {"ID", "Kode", "Nama Matkul", "SKS"}, 0);
         table.setModel(model);
         JScrollPane sp = new JScrollPane(table);
         sp.setBounds(20, 160, 540, 180);
         add(sp);
 
-        controller = new MatkulController(this); // TANPA conn
+        controller = new MatkulController(this);
         controller.loadMatkul();
 
         btnTambah.addActionListener(e -> {
             try {
-                int id = Integer.parseInt(txtId.getText());
+                String kode = txtKodeMk.getText();
                 String nama = txtNama.getText();
                 int sks = Integer.parseInt(txtSks.getText());
-                Matkul m = new Matkul(id, nama, sks);
+                Matkul m = new Matkul(0, kode, nama, sks);
                 controller.tambahMatkul(m);
                 clearInput();
             } catch (Exception ex) {
@@ -61,12 +63,12 @@ public class MatkulView extends JFrame {
 
         btnUbah.addActionListener(e -> {
             int row = table.getSelectedRow();
-            if (row >= 0) {
+            if (row >= 0 && idTerpilih != -1) {
                 try {
-                    int id = Integer.parseInt(txtId.getText());
+                    String kode = txtKodeMk.getText();
                     String nama = txtNama.getText();
                     int sks = Integer.parseInt(txtSks.getText());
-                    Matkul m = new Matkul(id, nama, sks);
+                    Matkul m = new Matkul(idTerpilih, kode, nama, sks);
                     controller.ubahMatkul(m);
                     clearInput();
                 } catch (Exception ex) {
@@ -77,13 +79,12 @@ public class MatkulView extends JFrame {
 
         btnHapus.addActionListener(e -> {
             int row = table.getSelectedRow();
-            if (row >= 0) {
+            if (row >= 0 && idTerpilih != -1) {
                 try {
-                    int id = Integer.parseInt(txtId.getText());
-                    controller.hapusMatkul(id);
+                    controller.hapusMatkul(idTerpilih);
                     clearInput();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Input tidak valid: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(this, "Gagal menghapus: " + ex.getMessage());
                 }
             }
         });
@@ -91,9 +92,10 @@ public class MatkulView extends JFrame {
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = table.getSelectedRow();
-                txtId.setText(model.getValueAt(row, 0).toString());
-                txtNama.setText(model.getValueAt(row, 1).toString());
-                txtSks.setText(model.getValueAt(row, 2).toString());
+                idTerpilih = Integer.parseInt(model.getValueAt(row, 0).toString());
+                txtKodeMk.setText(model.getValueAt(row, 1).toString());
+                txtNama.setText(model.getValueAt(row, 2).toString());
+                txtSks.setText(model.getValueAt(row, 3).toString());
             }
         });
     }
@@ -101,13 +103,15 @@ public class MatkulView extends JFrame {
     public void setMatkulList(List<Matkul> list) {
         model.setRowCount(0);
         for (Matkul m : list) {
-            model.addRow(new Object[]{m.getId(), m.getNama(), m.getSks()});
+            model.addRow(new Object[]{m.getId(), m.getKodeMk(), m.getNama(), m.getSks()});
         }
     }
 
     private void clearInput() {
-        txtId.setText("");
+        idTerpilih = -1;
+        txtKodeMk.setText("");
         txtNama.setText("");
         txtSks.setText("");
+        table.clearSelection();
     }
 }

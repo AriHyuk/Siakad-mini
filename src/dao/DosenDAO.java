@@ -7,7 +7,7 @@ import java.util.*;
 
 public class DosenDAO {
 
-    public List<Dosen> getAllDosen() {
+    public List<Dosen> getAll() {
         List<Dosen> list = new ArrayList<>();
         try (Connection conn = Database.getConnection();
              Statement st = conn.createStatement();
@@ -15,7 +15,7 @@ public class DosenDAO {
 
             while (rs.next()) {
                 Dosen m = new Dosen(
-                    rs.getInt("id"),
+                    rs.getInt("id_dosen"),
                     rs.getString("nama"),
                     rs.getString("alamat")
                 );
@@ -43,7 +43,7 @@ public class DosenDAO {
 
     public void updateDosen(Dosen m) {
         try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement("UPDATE dosen SET nama = ?, alamat = ? WHERE id = ?")) {
+             PreparedStatement ps = conn.prepareStatement("UPDATE dosen SET nama = ?, alamat = ? WHERE id_dosen = ?")) {
 
             ps.setString(1, m.getNama());
             ps.setString(2, m.getAlamat());
@@ -57,7 +57,7 @@ public class DosenDAO {
 
     public void deleteDosen(int id) {
         try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement("DELETE FROM dosen WHERE id = ?")) {
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM dosen WHERE id_dosen = ?")) {
 
             ps.setInt(1, id);
             ps.executeUpdate();

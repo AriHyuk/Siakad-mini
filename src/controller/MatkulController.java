@@ -11,10 +11,9 @@ public class MatkulController {
 
     public MatkulController(MatkulView view) {
         this.view = view;
-        this.dao = new MatkulDAO(); // TANPA parameter conn, sesuai DAO barumu!
+        this.dao = new MatkulDAO();
     }
 
-    // Tambah matkul
     public void tambahMatkul(Matkul m) {
         try {
             dao.insert(m);
@@ -24,7 +23,6 @@ public class MatkulController {
         }
     }
 
-    // Ubah matkul
     public void ubahMatkul(Matkul m) {
         try {
             dao.update(m);
@@ -34,7 +32,6 @@ public class MatkulController {
         }
     }
 
-    // Hapus matkul
     public void hapusMatkul(int id) {
         try {
             dao.delete(id);
@@ -44,7 +41,6 @@ public class MatkulController {
         }
     }
 
-    // Ambil data matkul dan tampilkan di tabel
     public void loadMatkul() {
         try {
             List<Matkul> list = dao.getAll();

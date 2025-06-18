@@ -12,26 +12,33 @@ import javax.swing.*;
  */
 
 
+
+/**
+ * @author Ari Awaludin
+ */
 public class MainView extends JFrame {
 
     private final JButton btnDosen     = new JButton("Dosen");
     private final JButton btnMahasiswa = new JButton("Mahasiswa");
-    private final JButton btnMatkul    = new JButton("Matkul");   // NEW
+    private final JButton btnMatkul    = new JButton("Matkul");
+    private final JButton btnJadwal    = new JButton("Jadwal");    // NEW
 
     public MainView() {
         setTitle("Menu Utama");
-        setSize(320, 220);               // dinaikkan sedikit biar muat 3 tombol
+        setSize(320, 270); // dinaikkan biar muat 4 tombol
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
 
         // ── Posisi tombol ─────────────────────────────
-        btnDosen.setBounds    (100,  40, 120, 30);
-        btnMahasiswa.setBounds(100,  85, 120, 30);
-        btnMatkul.setBounds   (100, 130, 120, 30);  // posisi baru
+        btnDosen.setBounds    (100,  30, 120, 30);
+        btnMahasiswa.setBounds(100,  70, 120, 30);
+        btnMatkul.setBounds   (100, 110, 120, 30);
+        btnJadwal.setBounds   (100, 150, 120, 30);  // posisi baru
 
         add(btnDosen);
         add(btnMahasiswa);
-        add(btnMatkul);                   // NEW
+        add(btnMatkul);
+        add(btnJadwal);  // NEW
 
         // ── Event-handler ─────────────────────────────
         btnDosen.addActionListener(e -> {
@@ -44,10 +51,16 @@ public class MainView extends JFrame {
             dispose();
         });
 
-        btnMatkul.addActionListener( e -> {           
+        btnMatkul.addActionListener(e -> {
             new MatkulView().setVisible(true);
+            dispose();
+        });
+
+        btnJadwal.addActionListener(e -> {
+            new JadwalView().setVisible(true);
             dispose();
         });
     }
 }
+
 

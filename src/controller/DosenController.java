@@ -24,7 +24,7 @@ public class DosenController {
 	}
 
 	public void loadDosen() {
-    	List<Dosen> list = dao.getAllDosen();
+    	List<Dosen> list = dao.getAll();
     	view.setDosenList(list);
 	}
 
@@ -39,8 +39,8 @@ public class DosenController {
     	loadDosen();
 	}
 
-	public void hapusDosen(int id) {
-    	dao.deleteDosen(id);
+	public void hapusDosen(int id_dosen) {
+    	dao.deleteDosen(id_dosen);
     	loadDosen();
 	}
     

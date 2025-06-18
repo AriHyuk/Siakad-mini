@@ -10,27 +10,31 @@ package model;
  */
 
 
+
 public class Matkul {
     private int id;
+    private String kodeMk;
     private String nama;
     private int sks;
 
     public Matkul() {}
 
-    public Matkul(int id, String nama, int sks) {
-        this.id   = id;
+    public Matkul(int id, String kodeMk, String nama, int sks) {
+        this.id = id;
+        this.kodeMk = kodeMk;
         this.nama = nama;
-        this.sks  = sks;
+        this.sks = sks;
     }
 
-    // getter & setter
-    public int getId()           { return id;   }
-    public void setId(int id)    { this.id = id; }
-
-    public String getNama()              { return nama; }
-    public void   setNama(String nama)   { this.nama = nama; }
-
-    public int getSks()          { return sks;  }
-    public void setSks(int sks)  { this.sks = sks; }
+    // Getter & Setter
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public String getKodeMk() { return kodeMk; }
+    public void setKodeMk(String kodeMk) { this.kodeMk = kodeMk; }
+    public String getNama() { return nama; }
+    public void setNama(String nama) { this.nama = nama; }
+    public int getSks() { return sks; }
+    public void setSks(int sks) { this.sks = sks; }
 }
+
 

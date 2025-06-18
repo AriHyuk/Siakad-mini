@@ -1,7 +1,7 @@
 package model;
 
 public class Dosen {
-    private int id;
+    private int id_dosen;
     private String nama;
     private String alamat;
 
@@ -9,18 +9,18 @@ public class Dosen {
     public Dosen() {}
 
     public Dosen(int id, String nama, String alamat) {
-        this.id = id;
+        this.id_dosen = id;
         this.nama = nama;
         this.alamat = alamat;
     }
 
     // Getter dan Setter
     public int getId() {
-        return id;
+        return id_dosen;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id_dosen = id;
     }
 
     public String getNama() {
