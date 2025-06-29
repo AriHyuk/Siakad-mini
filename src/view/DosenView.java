@@ -1,100 +1,256 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package view;
 
 import controller.DosenController;
 import model.Dosen;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+
+/**
+ *
+ * @author Ari Awaludin
+ */
+
+
+
 
 public class DosenView extends JFrame {
-
     private JTextField txtNama = new JTextField();
     private JTextField txtAlamat = new JTextField();
     private JButton btnTambah = new JButton("Tambah");
     private JButton btnUbah = new JButton("Ubah");
     private JButton btnHapus = new JButton("Hapus");
+    private JButton btnKembali = new JButton("Kembali");
     private JTable table = new JTable();
     private DefaultTableModel model;
     private DosenController controller;
 
     public DosenView() {
-        setTitle("Data Dosen");
-        setSize(600, 400);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(null);
+        setTitle("Sistem Akademik - Kelola Dosen");
+        setSize(900, 650);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        JLabel lblNama = new JLabel("Nama");
-        lblNama.setBounds(20, 30, 80, 25); add(lblNama);
-        txtNama.setBounds(100, 30, 150, 25); add(txtNama);
-
-        JLabel lblAlamat = new JLabel("Alamat");
-        lblAlamat.setBounds(20, 70, 80, 25); add(lblAlamat);
-        txtAlamat.setBounds(100, 70, 150, 25); add(txtAlamat);
-
-        btnTambah.setBounds(280, 30, 80, 25); add(btnTambah);
-        btnUbah.setBounds(280, 70, 80, 25); add(btnUbah);
-        btnHapus.setBounds(280, 110, 80, 25); add(btnHapus);
-
-        model = new DefaultTableModel(new Object[]{"ID", "Nama", "Alamat"}, 0);
+        // Main panel with border layout
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        
+        // Header panel
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(new Color(70, 130, 180));
+        headerPanel.setPreferredSize(new Dimension(getWidth(), 60));
+        headerPanel.setLayout(new BorderLayout());
+        
+        JLabel titleLabel = new JLabel("KELOLA DATA DOSEN", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titleLabel.setForeground(Color.WHITE);
+        headerPanel.add(titleLabel, BorderLayout.CENTER);
+        
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        
+        // Form panel
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createTitledBorder("Form Dosen"));
+//        formPanel.setBackground(Color.WHITE);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+        
+        
+    
+        
+        // Row 1 - Nama
+        gbc.gridx = 0; gbc.gridy = 1;
+        formPanel.add(new JLabel("Nama:"), gbc);
+        
+        gbc.gridx = 1;
+        txtNama.setPreferredSize(new Dimension(250, 30));
+        styleTextField(txtNama);
+        formPanel.add(txtNama, gbc);
+        
+        // Row 2 - Alamat
+        gbc.gridx = 0; gbc.gridy = 2;
+        formPanel.add(new JLabel("Alamat:"), gbc);
+        
+        gbc.gridx = 1;
+        txtAlamat.setPreferredSize(new Dimension(250, 30));
+        styleTextField(txtAlamat);
+        formPanel.add(txtAlamat, gbc);
+        
+        // Button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+        
+        styleButton(btnTambah, new Color(76, 175, 80));
+        styleButton(btnUbah, new Color(33, 150, 243));
+        styleButton(btnHapus, new Color(244, 67, 54));
+        styleButton(btnKembali, new Color(158, 158, 158));
+        
+        
+        buttonPanel.add(btnTambah);
+        buttonPanel.add(btnUbah);
+        buttonPanel.add(btnHapus);
+        buttonPanel.add(btnKembali);
+        
+        
+        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
+        formPanel.add(buttonPanel, gbc);
+        
+        mainPanel.add(formPanel, BorderLayout.WEST);
+        
+        // Table panel
+        JPanel tablePanel = new JPanel(new BorderLayout());
+        tablePanel.setBorder(BorderFactory.createTitledBorder("Daftar Dosen"));
+        
+        model = new DefaultTableModel(new Object[]{"ID_Dosen", "Nama", "Alamat"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
         table.setModel(model);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        table.setRowHeight(25);
+        table.setShowGrid(true);
+        table.setGridColor(new Color(240, 240, 240));
+        
         JScrollPane sp = new JScrollPane(table);
-        sp.setBounds(20, 150, 540, 200); add(sp);
-
+        sp.setPreferredSize(new Dimension(500, 400));
+        tablePanel.add(sp, BorderLayout.CENTER);
+        
+        mainPanel.add(tablePanel, BorderLayout.CENTER);
+        
+        // Footer panel
+        JPanel footerPanel = new JPanel();
+        footerPanel.setBackground(new Color(240, 240, 240));
+        footerPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+        footerPanel.setPreferredSize(new Dimension(getWidth(), 40));
+        mainPanel.add(footerPanel, BorderLayout.SOUTH);
+        
+        add(mainPanel);
+        
         controller = new DosenController(this);
         controller.loadDosen();
 
-        // Event: Tambah
+        // Action listeners
         btnTambah.addActionListener(e -> {
-            Dosen d = new Dosen(0, txtNama.getText(), txtAlamat.getText());
-            controller.tambahDosen(d);
-            clearInput();
+            if (!txtNama.getText().isEmpty() && !txtAlamat.getText().isEmpty()) {
+                Dosen m = new Dosen(0, txtNama.getText(), txtAlamat.getText());
+                controller.tambahDosen(m);
+                clearInput();
+            } else {
+                JOptionPane.showMessageDialog(this, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            }
         });
 
-        // Event: Ubah
         btnUbah.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row >= 0) {
-                int id = Integer.parseInt(model.getValueAt(row, 0).toString());
-                Dosen d = new Dosen(id, txtNama.getText(), txtAlamat.getText());
-                controller.ubahDosen(d);
-                clearInput();
+                if (!txtNama.getText().isEmpty() && !txtAlamat.getText().isEmpty()) {
+                    int id_dosen = Integer.parseInt(model.getValueAt(row, 0).toString());
+                    Dosen m = new Dosen(id_dosen, txtNama.getText(), txtAlamat.getText());
+                    controller.ubahDosen(m);
+                    clearInput();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Pilih data yang akan diubah!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             }
         });
 
-        // Event: Hapus
         btnHapus.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row >= 0) {
-                int id = Integer.parseInt(model.getValueAt(row, 0).toString());
-                controller.hapusDosen(id);
-                clearInput();
+                int confirm = JOptionPane.showConfirmDialog(
+                    this, 
+                    "Apakah Anda yakin ingin menghapus data ini?", 
+                    "Konfirmasi Hapus", 
+                    JOptionPane.YES_NO_OPTION
+                );
+                
+                if (confirm == JOptionPane.YES_OPTION) {
+                    int id_dosen = Integer.parseInt(model.getValueAt(row, 0).toString());
+                    controller.hapusDosen(id_dosen);
+                    clearInput();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Pilih data yang akan dihapus!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             }
         });
 
-        // Klik Tabel
+        btnKembali.addActionListener(e -> {
+            dispose();
+            new MainView().setVisible(true);
+        });
+
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = table.getSelectedRow();
                 if (row >= 0) {
-                    txtNama.setText(model.getValueAt(row, 1).toString());
-                    txtAlamat.setText(model.getValueAt(row, 2).toString());
+                    txtNama.setText(model.getValueAt(row, 2).toString());
+                    txtAlamat.setText(model.getValueAt(row, 3).toString());
                 }
             }
         });
+    }
 
-        setVisible(true);
+    private void styleButton(JButton button, Color bgColor) {
+        button.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        button.setBackground(bgColor);
+//        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setOpaque(true); 
+        button.setContentAreaFilled(true);
+        
+        
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(bgColor.darker());
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(bgColor);
+            }
+        });
+    }
+
+    private void styleTextField(JTextField textField) {
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        textField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
     }
 
     public void setDosenList(List<Dosen> list) {
         model.setRowCount(0);
-        for (Dosen d : list) {
-            model.addRow(new Object[]{d.getId(), d.getNama(), d.getAlamat()});
+        for (Dosen m : list) {
+            model.addRow(new Object[]{m.getId(), m.getNama(), m.getAlamat()});
         }
     }
 
     private void clearInput() {
         txtNama.setText("");
         txtAlamat.setText("");
+        table.clearSelection();
     }
 }

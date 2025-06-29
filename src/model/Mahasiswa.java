@@ -31,5 +31,11 @@ public class Mahasiswa {
 	public void setNama(String nama) { this.nama = nama; }
 	public String getJurusan() { return jurusan; }
 	public void setJurusan(String jurusan) { this.jurusan = jurusan; }
+        
+        @Override
+        public String toString() {
+        return nama + " (" + nim + ")";
+}
+
 }
 

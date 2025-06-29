@@ -3,14 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package view;
-
-import controller.MahasiswaController;
+import controller.KrsController;
+import dao.KrsDAO;
+import dao.MahasiswaDAO;
+import dao.JadwalDAO;
+import model.Krs;
 import model.Mahasiswa;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
+import model.Jadwal;
 
 /**
  *
@@ -20,20 +19,30 @@ import java.util.List;
 
 
 
-public class MahasiswaView extends JFrame {
-    private JTextField txtNim = new JTextField();
-    private JTextField txtNama = new JTextField();
-    private JTextField txtJurusan = new JTextField();
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+
+public class KrsView extends JFrame {
+    private JComboBox<Mahasiswa> comboMahasiswa = new JComboBox<>();
+    private JComboBox<Jadwal> comboJadwal = new JComboBox<>();
+    private JTextField txtSemester = new JTextField();
+
     private JButton btnTambah = new JButton("Tambah");
     private JButton btnUbah = new JButton("Ubah");
     private JButton btnHapus = new JButton("Hapus");
     private JButton btnKembali = new JButton("Kembali");
+
     private JTable table = new JTable();
     private DefaultTableModel model;
-    private MahasiswaController controller;
+    private int idTerpilih = -1;
 
-    public MahasiswaView() {
-        setTitle("Sistem Akademik - Kelola Mahasiswa");
+    private KrsController controller;
+
+    public KrsView() {
+        setTitle("Sistem Akademik - Kelola KRS");
         setSize(900, 650);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -54,7 +63,7 @@ public class MahasiswaView extends JFrame {
         headerPanel.setPreferredSize(new Dimension(getWidth(), 60));
         headerPanel.setLayout(new BorderLayout());
         
-        JLabel titleLabel = new JLabel("KELOLA DATA MAHASISWA", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("KELOLA KARTU RENCANA STUDI (KRS)", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
         titleLabel.setForeground(Color.WHITE);
         headerPanel.add(titleLabel, BorderLayout.CENTER);
@@ -64,39 +73,39 @@ public class MahasiswaView extends JFrame {
         // Form panel
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridBagLayout());
-        formPanel.setBorder(BorderFactory.createTitledBorder("Form Mahasiswa"));
+        formPanel.setBorder(BorderFactory.createTitledBorder("Form KRS"));
         formPanel.setBackground(Color.WHITE);
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
         
-        // Row 0 - NIM
+        // Row 0
         gbc.gridx = 0; gbc.gridy = 0;
-        formPanel.add(new JLabel("NIM:"), gbc);
+        formPanel.add(new JLabel("Mahasiswa:"), gbc);
         
         gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtNim.setPreferredSize(new Dimension(250, 30));
-        styleTextField(txtNim);
-        formPanel.add(txtNim, gbc);
+        comboMahasiswa.setPreferredSize(new Dimension(250, 30));
+        styleComboBox(comboMahasiswa);
+        formPanel.add(comboMahasiswa, gbc);
         
-        // Row 1 - Nama
+        // Row 1
         gbc.gridx = 0; gbc.gridy = 1;
-        formPanel.add(new JLabel("Nama:"), gbc);
+        formPanel.add(new JLabel("Jadwal:"), gbc);
         
         gbc.gridx = 1;
-        txtNama.setPreferredSize(new Dimension(250, 30));
-        styleTextField(txtNama);
-        formPanel.add(txtNama, gbc);
+        comboJadwal.setPreferredSize(new Dimension(250, 30));
+        styleComboBox(comboJadwal);
+        formPanel.add(comboJadwal, gbc);
         
-        // Row 2 - Jurusan
+        // Row 2
         gbc.gridx = 0; gbc.gridy = 2;
-        formPanel.add(new JLabel("Jurusan:"), gbc);
+        formPanel.add(new JLabel("Semester:"), gbc);
         
         gbc.gridx = 1;
-        txtJurusan.setPreferredSize(new Dimension(250, 30));
-        styleTextField(txtJurusan);
-        formPanel.add(txtJurusan, gbc);
+        txtSemester.setPreferredSize(new Dimension(250, 30));
+        styleTextField(txtSemester);
+        formPanel.add(txtSemester, gbc);
         
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
@@ -119,9 +128,9 @@ public class MahasiswaView extends JFrame {
         
         // Table panel
         JPanel tablePanel = new JPanel(new BorderLayout());
-        tablePanel.setBorder(BorderFactory.createTitledBorder("Daftar Mahasiswa"));
+        tablePanel.setBorder(BorderFactory.createTitledBorder("Daftar KRS"));
         
-        model = new DefaultTableModel(new Object[]{"ID", "NIM", "Nama", "Jurusan"}, 0) {
+        model = new DefaultTableModel(new Object[]{"ID", "Mahasiswa", "Jadwal", "Semester"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -150,30 +159,37 @@ public class MahasiswaView extends JFrame {
         
         add(mainPanel);
         
-        controller = new MahasiswaController(this);
-        controller.loadMahasiswa();
+        controller = new KrsController(this);
+        controller.loadData();
+        loadComboData();
 
         // Action listeners
         btnTambah.addActionListener(e -> {
-            if (!txtNim.getText().isEmpty() && !txtNama.getText().isEmpty() && !txtJurusan.getText().isEmpty()) {
-                Mahasiswa m = new Mahasiswa(0, txtNim.getText(), txtNama.getText(), txtJurusan.getText());
-                controller.tambahMahasiswa(m);
-                clearInput();
-            } else {
-                JOptionPane.showMessageDialog(this, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            try {
+                Mahasiswa mhs = (Mahasiswa) comboMahasiswa.getSelectedItem();
+                Jadwal jadwal = (Jadwal) comboJadwal.getSelectedItem();
+                String semester = txtSemester.getText();
+                if (mhs != null && jadwal != null && !semester.isEmpty()) {
+                    controller.tambahKrs(new Krs(0, mhs.getId(), jadwal.getId(), semester));
+                    clearInput();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Data belum lengkap!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         btnUbah.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row >= 0) {
-                if (!txtNim.getText().isEmpty() && !txtNama.getText().isEmpty() && !txtJurusan.getText().isEmpty()) {
-                    int id = Integer.parseInt(model.getValueAt(row, 0).toString());
-                    Mahasiswa m = new Mahasiswa(id, txtNim.getText(), txtNama.getText(), txtJurusan.getText());
-                    controller.ubahMahasiswa(m);
+            if (idTerpilih != -1) {
+                try {
+                    Mahasiswa mhs = (Mahasiswa) comboMahasiswa.getSelectedItem();
+                    Jadwal jadwal = (Jadwal) comboJadwal.getSelectedItem();
+                    String semester = txtSemester.getText();
+                    controller.ubahKrs(new Krs(idTerpilih, mhs.getId(), jadwal.getId(), semester));
                     clearInput();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Pilih data yang akan diubah!", "Peringatan", JOptionPane.WARNING_MESSAGE);
@@ -181,8 +197,7 @@ public class MahasiswaView extends JFrame {
         });
 
         btnHapus.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row >= 0) {
+            if (idTerpilih != -1) {
                 int confirm = JOptionPane.showConfirmDialog(
                     this, 
                     "Apakah Anda yakin ingin menghapus data ini?", 
@@ -191,8 +206,7 @@ public class MahasiswaView extends JFrame {
                 );
                 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    int id = Integer.parseInt(model.getValueAt(row, 0).toString());
-                    controller.hapusMahasiswa(id);
+                    controller.hapusKrs(idTerpilih);
                     clearInput();
                 }
             } else {
@@ -209,9 +223,21 @@ public class MahasiswaView extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int row = table.getSelectedRow();
                 if (row >= 0) {
-                    txtNim.setText(model.getValueAt(row, 1).toString());
-                    txtNama.setText(model.getValueAt(row, 2).toString());
-                    txtJurusan.setText(model.getValueAt(row, 3).toString());
+                    idTerpilih = Integer.parseInt(model.getValueAt(row, 0).toString());
+                    int idMhs = Integer.parseInt(model.getValueAt(row, 1).toString());
+                    int idJadwal = Integer.parseInt(model.getValueAt(row, 2).toString());
+                    txtSemester.setText(model.getValueAt(row, 3).toString());
+
+                    for (int i = 0; i < comboMahasiswa.getItemCount(); i++) {
+                        if (comboMahasiswa.getItemAt(i).getId() == idMhs) {
+                            comboMahasiswa.setSelectedIndex(i); break;
+                        }
+                    }
+                    for (int i = 0; i < comboJadwal.getItemCount(); i++) {
+                        if (comboJadwal.getItemAt(i).getId() == idJadwal) {
+                            comboJadwal.setSelectedIndex(i); break;
+                        }
+                    }
                 }
             }
         });
@@ -235,6 +261,15 @@ public class MahasiswaView extends JFrame {
         });
     }
 
+    private void styleComboBox(JComboBox<?> comboBox) {
+        comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        comboBox.setBackground(Color.WHITE);
+        comboBox.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+    }
+
     private void styleTextField(JTextField textField) {
         textField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         textField.setBorder(BorderFactory.createCompoundBorder(
@@ -243,17 +278,36 @@ public class MahasiswaView extends JFrame {
         ));
     }
 
-    public void setMahasiswaList(List<Mahasiswa> list) {
+    private void loadComboData() {
+        comboMahasiswa.removeAllItems();
+        comboJadwal.removeAllItems();
+
+        List<Mahasiswa> mahasiswaList = new MahasiswaDAO().getAllMahasiswa();
+        for (Mahasiswa m : mahasiswaList) {
+            comboMahasiswa.addItem(m);
+        }
+
+        List<Jadwal> jadwalList = new JadwalDAO().getAll();
+        for (Jadwal j : jadwalList) {
+            comboJadwal.addItem(j);
+        }
+    }
+
+    public void setKrsList(List<Krs> list) {
         model.setRowCount(0);
-        for (Mahasiswa m : list) {
-            model.addRow(new Object[]{m.getId(), m.getNim(), m.getNama(), m.getJurusan()});
+        for (Krs k : list) {
+            model.addRow(new Object[]{k.getId(), k.getIdMahasiswa(), k.getIdJadwal(), k.getSemester()});
         }
     }
 
     private void clearInput() {
-        txtNim.setText("");
-        txtNama.setText("");
-        txtJurusan.setText("");
+        idTerpilih = -1;
+        txtSemester.setText("");
+        if (comboMahasiswa.getItemCount() > 0) comboMahasiswa.setSelectedIndex(0);
+        if (comboJadwal.getItemCount() > 0) comboJadwal.setSelectedIndex(0);
         table.clearSelection();
     }
 }
+
+
+

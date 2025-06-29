@@ -5,19 +5,31 @@
         <group>
             <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/MainView.java</file>
             <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/config/Database.java</file>
-            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/controller/MatkulController.java</file>
-            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/dao/MatkulDAO.java</file>
-            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/LoginView.java</file>
-            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/model/User.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/model/Jadwal.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/model/Dosen.java</file>
             <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/model/Mahasiswa.java</file>
-            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/MahasiswaView.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/controller/JadwalController.java</file>
             <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/controller/MahasiswaController.java</file>
             <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/controller/LoginController.java</file>
-            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/MatkulView.java</file>
             <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/dao/UserDAO.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/dao/DosenDAO.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/controller/MatkulController.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/dao/MatkulDAO.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/JadwalView.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/LoginView.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/model/User.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/KrsView.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/controller/KrsController.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/MahasiswaView.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/dao/JadwalDAO.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/MatkulView.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/dao/KrsDAO.java</file>
             <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/dao/MahasiswaDAO.java</file>
             <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/siakad/Siakad.java</file>
             <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/model/Matkul.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/controller/DosenController.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/view/DosenView.java</file>
+            <file>file:/C:/Users/Ari%20Awaludin/Java%20Project/Siakad/src/model/Krs.java</file>
         </group>
     </open-files>
 </project-private>

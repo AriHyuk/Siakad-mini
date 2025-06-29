@@ -26,6 +26,8 @@ public class Jadwal {
         this.ruang = ruang;
         this.waktu = waktu;
     }
+    
+    
 
     // Getter & Setter
     public int getId() { return id; }
@@ -42,5 +44,11 @@ public class Jadwal {
 
     public String getWaktu() { return waktu; }
     public void setWaktu(String waktu) { this.waktu = waktu; }
+    
+    @Override
+    public String toString() {
+    return "Jadwal ID " + id + " - Ruang " + ruang + ", " + waktu;
+}
+
 }
 
