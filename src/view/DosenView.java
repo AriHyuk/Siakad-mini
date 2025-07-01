@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package view;
 
 import controller.DosenController;
@@ -12,14 +8,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
-
-/**
- *
- * @author Ari Awaludin
- */
-
-
-
 
 public class DosenView extends JFrame {
     private JTextField txtNama = new JTextField();
@@ -65,17 +53,13 @@ public class DosenView extends JFrame {
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridBagLayout());
         formPanel.setBorder(BorderFactory.createTitledBorder("Form Dosen"));
-//        formPanel.setBackground(Color.WHITE);
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
         
-        
-    
-        
         // Row 1 - Nama
-        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridx = 0; gbc.gridy = 0;
         formPanel.add(new JLabel("Nama:"), gbc);
         
         gbc.gridx = 1;
@@ -84,7 +68,7 @@ public class DosenView extends JFrame {
         formPanel.add(txtNama, gbc);
         
         // Row 2 - Alamat
-        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridx = 0; gbc.gridy = 1;
         formPanel.add(new JLabel("Alamat:"), gbc);
         
         gbc.gridx = 1;
@@ -101,14 +85,12 @@ public class DosenView extends JFrame {
         styleButton(btnHapus, new Color(244, 67, 54));
         styleButton(btnKembali, new Color(158, 158, 158));
         
-        
         buttonPanel.add(btnTambah);
         buttonPanel.add(btnUbah);
         buttonPanel.add(btnHapus);
         buttonPanel.add(btnKembali);
         
-        
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
         formPanel.add(buttonPanel, gbc);
         
         mainPanel.add(formPanel, BorderLayout.WEST);
@@ -117,7 +99,7 @@ public class DosenView extends JFrame {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBorder(BorderFactory.createTitledBorder("Daftar Dosen"));
         
-        model = new DefaultTableModel(new Object[]{"ID_Dosen", "Nama", "Alamat"}, 0) {
+        model = new DefaultTableModel(new Object[]{"ID Dosen", "Nama", "Alamat"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -164,7 +146,7 @@ public class DosenView extends JFrame {
             int row = table.getSelectedRow();
             if (row >= 0) {
                 if (!txtNama.getText().isEmpty() && !txtAlamat.getText().isEmpty()) {
-                    int id_dosen = Integer.parseInt(model.getValueAt(row, 0).toString());
+                    int id_dosen = (int) model.getValueAt(row, 0);
                     Dosen m = new Dosen(id_dosen, txtNama.getText(), txtAlamat.getText());
                     controller.ubahDosen(m);
                     clearInput();
@@ -187,7 +169,7 @@ public class DosenView extends JFrame {
                 );
                 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    int id_dosen = Integer.parseInt(model.getValueAt(row, 0).toString());
+                    int id_dosen = (int) model.getValueAt(row, 0);
                     controller.hapusDosen(id_dosen);
                     clearInput();
                 }
@@ -205,8 +187,8 @@ public class DosenView extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int row = table.getSelectedRow();
                 if (row >= 0) {
-                    txtNama.setText(model.getValueAt(row, 2).toString());
-                    txtAlamat.setText(model.getValueAt(row, 3).toString());
+                    txtNama.setText(model.getValueAt(row, 1).toString());
+                    txtAlamat.setText(model.getValueAt(row, 2).toString());
                 }
             }
         });
@@ -215,13 +197,10 @@ public class DosenView extends JFrame {
     private void styleButton(JButton button, Color bgColor) {
         button.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         button.setBackground(bgColor);
-//        button.setForeground(Color.WHITE);
+        button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setOpaque(true); 
-        button.setContentAreaFilled(true);
-        
         
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
