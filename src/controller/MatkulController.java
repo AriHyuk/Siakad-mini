@@ -53,4 +53,5 @@ public class MatkulController {
     private void showError(String msg) {
         javax.swing.JOptionPane.showMessageDialog(view, msg);
     }
+    
 }

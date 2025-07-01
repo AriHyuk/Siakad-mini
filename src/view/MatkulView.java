@@ -24,7 +24,7 @@ public class MatkulView extends JFrame {
     public MatkulView() {
         setTitle("Sistem Akademik - Kelola Mata Kuliah");
         setSize(900, 650);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         
         try {
@@ -32,6 +32,14 @@ public class MatkulView extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+            // Initialize UI components
+    JButton btnKembali = new JButton("Kembali");
+    
+    // Set up action listener for kembali button
+    btnKembali.addActionListener(e -> {
+        dispose();
+    });
 
         // Main panel with border layout
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -257,4 +265,6 @@ public class MatkulView extends JFrame {
         txtSks.setText("");
         table.clearSelection();
     }
+    
+    
 }

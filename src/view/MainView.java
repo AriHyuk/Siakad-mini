@@ -1,23 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package view;
+
 import javax.swing.*;
-
 import java.awt.*;
-
-
-
+import java.awt.event.*;
 
 /**
  * @author Ari Awaludin
  */
-
-
-
 public class MainView extends JFrame {
-
     private final JButton btnDosen = new JButton("Dosen");
     private final JButton btnMahasiswa = new JButton("Mahasiswa");
     private final JButton btnMatkul = new JButton("Mata Kuliah");
@@ -27,135 +17,203 @@ public class MainView extends JFrame {
 
     public MainView() {
         setTitle("Sistem Akademik - Menu Utama");
-        setSize(800, 600);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(900, 700);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
         
-        // Use modern look and feel
+        // Set modern look and feel
+        setModernLookAndFeel();
+        
+        // Setup main UI components
+        setupUI();
+        
+        // Setup event listeners
+        setupEventListeners();
+        
+        // Set window close listener
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                confirmExit();
+            }
+        });
+    }
+
+    private void setModernLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.put("Button.focus", new Color(0, 0, 0, 0)); // Remove focus highlight
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void setupUI() {
         // Main panel with border layout
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.setBackground(Color.WHITE);
         
-        // Header panel
-        JPanel headerPanel = new JPanel();
-        headerPanel.setBackground(new Color(70, 130, 180));
-        headerPanel.setPreferredSize(new Dimension(getWidth(), 60));
-        headerPanel.setLayout(new BorderLayout());
+        // Add header
+        mainPanel.add(createHeaderPanel(), BorderLayout.NORTH);
         
+        // Add center content
+        mainPanel.add(createContentPanel(), BorderLayout.CENTER);
+        
+        // Add footer
+        mainPanel.add(createFooterPanel(), BorderLayout.SOUTH);
+        
+        add(mainPanel);
+    }
+
+    private JPanel createHeaderPanel() {
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(52, 152, 219));
+        headerPanel.setPreferredSize(new Dimension(getWidth(), 70));
+        
+        // Application title
         JLabel titleLabel = new JLabel("SISTEM AKADEMIK", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
         titleLabel.setForeground(Color.WHITE);
         headerPanel.add(titleLabel, BorderLayout.CENTER);
         
-        // Add logout button to header
-        btnLogout.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnLogout.setBackground(new Color(220, 80, 80));
-        btnLogout.setForeground(Color.WHITE);
-        btnLogout.setFocusPainted(false);
-        btnLogout.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        // Logout button
+        styleButton(btnLogout, new Color(231, 76, 60));
+        btnLogout.setFont(new Font("Segoe UI", Font.BOLD, 12));
         headerPanel.add(btnLogout, BorderLayout.EAST);
         
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-        
-        // Content panel with grid layout for buttons
+        return headerPanel;
+    }
+
+    private JPanel createContentPanel() {
         JPanel contentPanel = new JPanel(new GridBagLayout());
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 150, 40, 150));
         contentPanel.setBackground(Color.WHITE);
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 0, 10, 0);
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(15, 0, 15, 0);
+        gbc.weightx = 1.0;
+        gbc.ipady = 20;
         
-        // Configure buttons
-        JButton[] buttons = {btnDosen, btnMahasiswa, btnMatkul, btnJadwal, btnKrs};
-        for (JButton button : buttons) {
-            styleButton(button);
-            contentPanel.add(button, gbc);
-        }
+        // Style and add menu buttons
+        styleButton(btnDosen, new Color(52, 152, 219));
+        styleButton(btnMahasiswa, new Color(155, 89, 182));
+        styleButton(btnMatkul, new Color(26, 188, 156));
+        styleButton(btnJadwal, new Color(241, 196, 15));
+        styleButton(btnKrs, new Color(230, 126, 34));
         
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
+        contentPanel.add(btnDosen, gbc);
+        contentPanel.add(btnMahasiswa, gbc);
+        contentPanel.add(btnMatkul, gbc);
+        contentPanel.add(btnJadwal, gbc);
+        contentPanel.add(btnKrs, gbc);
         
-        // Footer panel
-        JPanel footerPanel = new JPanel();
-        footerPanel.setBackground(new Color(240, 240, 240));
-        footerPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
-        footerPanel.setPreferredSize(new Dimension(getWidth(), 40));
+        return contentPanel;
+    }
+
+    private JPanel createFooterPanel() {
+        JPanel footerPanel = new JPanel(new BorderLayout());
+        footerPanel.setBackground(new Color(52, 152, 219));
+        footerPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
         
-        JLabel footerLabel = new JLabel("© 2023 Sistem Akademik - Universitas Contoh");
+        JLabel footerLabel = new JLabel("© 2023 Sistem Akademik - Universitas Contoh", SwingConstants.CENTER);
         footerLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        footerPanel.add(footerLabel);
+        footerLabel.setForeground(Color.WHITE);
+        footerPanel.add(footerLabel, BorderLayout.CENTER);
         
-        mainPanel.add(footerPanel, BorderLayout.SOUTH);
-        
-        add(mainPanel);
-        
-        // Button actions
-        btnDosen.addActionListener(e -> {
-            new DosenView().setVisible(true);
-            dispose();
-        });
+        return footerPanel;
+    }
 
-        btnMahasiswa.addActionListener(e -> {
-            new MahasiswaView().setVisible(true);
-            dispose();
-        });
-
-        btnMatkul.addActionListener(e -> {
-            new MatkulView().setVisible(true);
-            dispose();
-        });
-
-        btnJadwal.addActionListener(e -> {
-            new JadwalView().setVisible(true);
-            dispose();
-        });
+    private void styleButton(JButton button, Color bgColor) {
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(bgColor.darker(), 1),
+            BorderFactory.createEmptyBorder(8, 25, 8, 25)
+        ));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        btnKrs.addActionListener(e -> {
-            new KrsView().setVisible(true);
-            dispose();
-        });
-        
-        btnLogout.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(
-                this, 
-                "Apakah Anda yakin ingin logout?", 
-                "Konfirmasi Logout", 
-                JOptionPane.YES_NO_OPTION
-            );
-            
-            if (confirm == JOptionPane.YES_OPTION) {
-                // Here you would typically return to login screen
-                JOptionPane.showMessageDialog(this, "Logout berhasil");
-                dispose();
-                // new LoginView().setVisible(true); // Uncomment if you have login view
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                button.setBackground(bgColor.darker());
+            }
+            public void mouseExited(MouseEvent evt) {
+                button.setBackground(bgColor);
             }
         });
     }
-    
-    private void styleButton(JButton button) {
-        button.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        button.setBackground(new Color(70, 130, 180));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+    private void setupEventListeners() {
+        // Menu button actions
+        btnDosen.addActionListener(e -> openView(new DosenView()));
+        btnMahasiswa.addActionListener(e -> openView(new MahasiswaView()));
+        btnMatkul.addActionListener(e -> openView(new MatkulView()));
+        btnJadwal.addActionListener(e -> openView(new JadwalView()));
+        btnKrs.addActionListener(e -> openView(new KrsView()));
         
-        // Hover effect
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(100, 150, 200));
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(70, 130, 180));
-            }
-        });
+        // Logout action
+        btnLogout.addActionListener(e -> confirmLogout());
+        
+        // Set keyboard mnemonics
+        btnDosen.setMnemonic(KeyEvent.VK_D);
+        btnMahasiswa.setMnemonic(KeyEvent.VK_M);
+        btnMatkul.setMnemonic(KeyEvent.VK_K);
+        btnJadwal.setMnemonic(KeyEvent.VK_J);
+        btnKrs.setMnemonic(KeyEvent.VK_R);
+    }
+
+private void openView(JFrame view) {
+    view.setVisible(true);
+    this.setVisible(false); // Sembunyikan MainView alih-alih dispose
+    view.addWindowListener(new WindowAdapter() {
+        @Override
+        public void windowClosed(WindowEvent e) {
+            MainView.this.setVisible(true); // Tampilkan kembali MainView saat view ditutup
+        }
+    });
+}
+
+    private void confirmLogout() {
+        Object[] options = {"Ya, Logout", "Batal"};
+        int confirm = JOptionPane.showOptionDialog(
+            this, 
+            "Apakah Anda yakin ingin logout dari sistem?", 
+            "Konfirmasi Logout",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.WARNING_MESSAGE,
+            null,
+            options,
+            options[1]
+        );
+        
+        if (confirm == 0) {
+            dispose();
+            // Uncomment to return to login view:
+            // new LoginView().setVisible(true);
+        }
+    }
+
+    private void confirmExit() {
+        Object[] options = {"Ya, Keluar", "Batal"};
+        int confirm = JOptionPane.showOptionDialog(
+            this, 
+            "Apakah Anda yakin ingin keluar dari aplikasi?", 
+            "Konfirmasi Keluar",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.WARNING_MESSAGE,
+            null,
+            options,
+            options[1]
+        );
+        
+        if (confirm == 0) {
+            dispose();
+            System.exit(0);
+        }
     }
 
     public static void main(String[] args) {
@@ -165,6 +223,3 @@ public class MainView extends JFrame {
         });
     }
 }
-
-
-
