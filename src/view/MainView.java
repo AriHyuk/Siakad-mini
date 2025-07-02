@@ -118,7 +118,7 @@ public class MainView extends JFrame {
         footerPanel.setBackground(new Color(52, 152, 219));
         footerPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
         
-        JLabel footerLabel = new JLabel("© 2023 Sistem Akademik - Universitas Contoh", SwingConstants.CENTER);
+        JLabel footerLabel = new JLabel("© 2025 Sistem Akademik - Universitas Pamulang", SwingConstants.CENTER);
         footerLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         footerLabel.setForeground(Color.WHITE);
         footerPanel.add(footerLabel, BorderLayout.CENTER);

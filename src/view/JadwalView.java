@@ -61,7 +61,6 @@ public class JadwalView extends JFrame {
         
         JLabel titleLabel = new JLabel("KELOLA JADWAL PERKULIAHAN", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        titleLabel.setForeground(Color.WHITE);
         headerPanel.add(titleLabel, BorderLayout.CENTER);
         
         mainPanel.add(headerPanel, BorderLayout.NORTH);
@@ -271,8 +270,6 @@ public class JadwalView extends JFrame {
 
     private void styleButton(JButton button, Color bgColor) {
         button.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        button.setBackground(bgColor);
-        button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
